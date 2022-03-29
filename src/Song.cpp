@@ -31,10 +31,6 @@
 
 #include <iostream>
 
-uint64_t timeSinceEpochMillisec2() {
-  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-}
-
 void CSong::init2(CScore * scoreWin, CSettings* settings)
 {
 

@@ -30,6 +30,20 @@
 #include <vector>
 #include <string>
 
+#include <chrono>
+#include <sys/time.h>
+#include <ctime>
+
+using namespace std::chrono;
+
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::seconds;
+using std::chrono::system_clock;
+
+uint64_t timeSinceEpochMillisec2();
+
+
 class CommonUtil
 {
 public:

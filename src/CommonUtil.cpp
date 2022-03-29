@@ -70,3 +70,7 @@ std::string CommonUtil::trim(std::string const &text) {
 
     return text.substr(start, end + 1);
 }
+
+uint64_t timeSinceEpochMillisec2() {
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}

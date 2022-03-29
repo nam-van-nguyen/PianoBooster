@@ -35,29 +35,15 @@
 #include <unordered_set>
 #include <QBasicTimer>
 
-#include <chrono>
-#include <sys/time.h>
-#include <ctime>
-
 #include "Notation.h"
 #include "Conductor.h"
 #include "TrackList.h"
 
+#include "CommonUtil.h"
 
 #define PC_KEY_LOWEST_NOTE    58
 #define PC_KEY_HIGHEST_NOTE    75
 
-
-using namespace std::chrono;
-
-using std::chrono::duration_cast;
-using std::chrono::milliseconds;
-using std::chrono::seconds;
-using std::chrono::system_clock;
-
-
-/** Could move this to a common utility file */
-uint64_t timeSinceEpochMillisec2();
 
 class SongControlListener {
 public:

@@ -445,6 +445,47 @@ CColor CSettings::playZoneMiddleColor()  {return getColor("playZoneMiddle");}
 CColor CSettings::staveColor()           {return getColor("stave");}
 CColor CSettings::staveDimColor()        {return getColor("staveDim");}
 
+void CSettings::getCommaDelimittedList(QString name, std::vector<std::string> &list, QString defVal) {
+    QString value = this->value(name, defVal).toString();
+    if (value.isEmpty()) {
+        return;
+    }
+
+    CommonUtil::tokenize(value.toStdString(), ",", list);
+}
+
+void CSettings::getKeyboardCmdKeys(QString name, std::vector<int> & keys, QString defVal) {
+    std::vector<std::string> list;
+    getCommaDelimittedList(name, list, defVal);
+
+    vector<string>::iterator it = list.begin();
+    while ( it != list.end()) {
+        string val = *it;
+        val = CommonUtil::trim(val);
+        if ( !val.empty()) {
+            keys.push_back(std::stoi(val));
+        }
+        it++;
+    }
+}
+
+void CSettings::getStartStopKeys(std::vector<int> &keys) {
+    getKeyboardCmdKeys("startStopKeys", keys, "21,108");
+}
+
+void CSettings::getReWindKeys(std::vector<int> &keys) {
+    getKeyboardCmdKeys("rewindKeys", keys, "21,107");
+}
+
+void CSettings::getSpeedUpKeys(std::vector<int> &keys) {
+    getKeyboardCmdKeys("speedUpKeys", keys, "21,105");
+}
+
+void CSettings::getSpeedDownKeys(std::vector<int> &keys) {
+    getKeyboardCmdKeys("speedDownKeys", keys, "21,103");
+}
+
+
 std::unordered_map<std::string, CColor *> CSettings::colorCache;
 
 void CSettings::clearCache() {

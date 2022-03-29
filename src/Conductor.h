@@ -128,7 +128,7 @@ public:
             m_skill = 0;
     }
 
-    void pianistInput(CMidiEvent inputNote);
+    virtual void pianistInput(CMidiEvent inputNote);
     void expandPianistInput(CMidiEvent inputNote);
 
     void setPlayMode(playMode_t mode);

@@ -36,12 +36,15 @@
 #include <QFileInfo>
 #include <QDir>
 
+#include <vector>
+
 #include "IColorPreference.h"
 
 #include "Song.h"
 #include "Notation.h"
 
 #include "Themes.h"
+#include "CommonUtil.h"
 
 #define QSTR_APPNAME "pianobooster"
 
@@ -211,6 +214,18 @@ public:
         CSettings::colorCache[name] = color;
         return *color;
     }
+
+    void getCommaDelimittedList(QString name, std::vector<std::string> &list, QString defVal);
+
+    void getKeyboardCmdKeys(QString name, std::vector<int> & keys, QString defVal);
+
+    void getStartStopKeys(std::vector<int> &keys);
+
+    void getReWindKeys(std::vector<int> &keys);
+
+    void getSpeedUpKeys(std::vector<int> &keys);
+
+    void getSpeedDownKeys(std::vector<int> &keys);
 
     void loadBackgroundSettings() {
         CThemeList themeList;

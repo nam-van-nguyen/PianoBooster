@@ -39,7 +39,7 @@
 
 #include "ui_GuiTopBar.h"
 
-class GuiTopBar : public QWidget, private Ui::GuiTopBar
+class GuiTopBar : public QWidget, private Ui::GuiTopBar, public SongControlListener
 {
     Q_OBJECT
 
@@ -58,6 +58,8 @@ public:
     void updateTranslate();
     void updateThemeCombobox();
     void forceGuiUpdate();
+    void speedChanged(float value);
+    void playState(bool playing);
 
 public slots:
     void on_playFromStartButton_clicked(bool clicked);

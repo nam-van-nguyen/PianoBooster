@@ -62,6 +62,8 @@ GuiTopBar::GuiTopBar(QWidget *parent, CSettings* settings)
 void GuiTopBar::init(CSong* songObj, CGLView * m_glWidget)
 {
     m_song = songObj;
+    m_song->setSongControlListener(this);
+
     m_glView = m_glWidget;
     reloadKeyCombo(true);
 
@@ -71,6 +73,14 @@ void GuiTopBar::init(CSong* songObj, CGLView * m_glWidget)
     themeCobox->setView(view);
 
     updateThemeCombobox();
+}
+
+void GuiTopBar::speedChanged(float value) {
+    this->speedSpin->setValue((int) (value * 100.0));
+}
+
+void GuiTopBar::playState(bool playing) {
+    setPlayButtonState(playing);
 }
 
 void GuiTopBar::updateThemeCombobox() {
@@ -118,7 +128,7 @@ void GuiTopBar::setSelectedTheme(QString themeName) {
 void GuiTopBar::forceGuiUpdate() {
     m_glView->updateBackground(true);
     m_song->forceScoreRedraw();
-    m_song->rewind();
+    //m_song->rewind();
 }
 
 void GuiTopBar::refresh(bool reset)

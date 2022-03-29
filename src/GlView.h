@@ -76,6 +76,9 @@ private:
     void drawBarNumber();
     void updateMidiTask();
 
+    ofstream myfile;
+    uint64_t prevTime;
+
     QString accuracyText;
     int accuracyBarStart = 0;
 

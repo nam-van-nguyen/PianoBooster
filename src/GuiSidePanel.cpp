@@ -31,7 +31,7 @@
 #include "GuiSidePanel.h"
 #include "GuiTopBar.h"
 #include "TrackList.h"
-#include "Conductor.h"
+
 
 GuiSidePanel::GuiSidePanel(QWidget *parent, CSettings* settings)
     : QWidget(parent), m_parent(parent)

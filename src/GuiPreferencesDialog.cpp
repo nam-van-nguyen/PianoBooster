@@ -399,7 +399,7 @@ void GuiPreferencesDialog::forceGlViewUpdate() {
     //m_glView->updateBackground(true);
     m_glView->updateBackground(true);
     m_song->forceScoreRedraw();
-    m_song->rewind();
+    //m_song->rewind();
     updateColorSelBtnBg();
 }
 

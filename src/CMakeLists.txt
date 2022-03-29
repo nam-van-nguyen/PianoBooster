@@ -154,6 +154,7 @@ endif()
 # here we define PIANOBOOSTER_SRCS variable that contains a list of all .cpp files
 # note that we don't need \ at the end of line
 SET( PIANOBOOSTER_SRCS
+    CommonUtil.cpp
     QtMain.cpp
     QtWindow.cpp
     GuiTopBar.cpp

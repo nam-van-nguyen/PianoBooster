@@ -29,6 +29,12 @@
 #include "Song.h"
 #include "Score.h"
 
+#include <iostream>
+
+uint64_t timeSinceEpochMillisec2() {
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
 void CSong::init2(CScore * scoreWin, CSettings* settings)
 {
 
@@ -40,6 +46,49 @@ void CSong::init2(CScore * scoreWin, CSettings* settings)
     setPlayMode(PB_PLAY_MODE_followYou);
     setSpeed(1.0);
     setSkill(3);
+
+    std::vector<int> startStopKeys;
+    settings->getStartStopKeys(startStopKeys);
+
+    std::vector<int> rewindKeys;
+    settings->getReWindKeys(rewindKeys);
+
+    std::vector<int> speedUpKeys;
+    settings->getSpeedUpKeys(speedUpKeys);
+
+    std::vector<int> speedDownKeys;
+    settings->getSpeedDownKeys(speedDownKeys);
+
+    auto iter = startStopKeys.begin();
+    while ( iter != startStopKeys.end()) {
+        specialKeySet.insert(*iter);
+        startStopSet.insert(*iter);
+        iter++;
+    }
+
+    iter = rewindKeys.begin();
+    while ( iter != rewindKeys.end()) {
+        specialKeySet.insert(*iter);
+        restartSet.insert(*iter);
+        iter++;
+    }
+
+    iter = speedUpKeys.begin();
+    while ( iter != speedUpKeys.end()) {
+        specialKeySet.insert(*iter);
+        speedupSet.insert(*iter);
+        iter++;
+    }
+
+    iter = speedDownKeys.begin();
+    while ( iter != speedDownKeys.end()) {
+        specialKeySet.insert(*iter);
+        speeddownSet.insert(*iter);
+        iter++;
+    }
+
+    speedDir = 0;
+
 }
 
 void CSong::loadSong(const QString & filename)
@@ -102,6 +151,113 @@ void CSong::rewind()
     m_scoreWin->reset();
     reset();
     forceScoreRedraw();
+}
+
+void CSong::handleSpecialKey(CMidiEvent inputNote) {
+    if ( specialKeySet.find(inputNote.note()) == specialKeySet.end()) {
+        return;
+    }
+
+    if (inputNote.type() == MIDI_NOTE_ON) {
+        specialNoteInputsOn.push_back(NoteInput(inputNote.note()));
+
+        uint64_t curTime = timeSinceEpochMillisec2();
+
+        vector<NoteInput>::iterator it = specialNoteInputsOn.begin();
+        while ( it != specialNoteInputsOn.end()) {
+            NoteInput val = *it;
+            if ( curTime - val.time > 60 ) {
+                it = specialNoteInputsOn.erase(it);
+                continue;
+            } else {
+                it++;
+            }
+        }
+
+        if (  specialNoteInputsOn.size() < 2 ) {    //Must mapt to more than 1 keys
+            return;
+        }
+
+        std::unordered_set<int> startStopSet(this->startStopSet);
+        std::unordered_set<int> restartSet(this->restartSet);
+        std::unordered_set<int> speedupSet(this->speedupSet);
+        std::unordered_set<int> speeddownSet(this->speeddownSet);
+
+        for ( int i = specialNoteInputsOn.size() - 1; i >= 0; i-- ) {
+            NoteInput val = specialNoteInputsOn.at(i);
+            if ( restartSet.find(val.note) != restartSet.end()) {
+                restartSet.erase(val.note);
+            }
+            if ( speedupSet.find(val.note) != speedupSet.end()) {
+                speedupSet.erase(val.note);
+            }
+            if ( speeddownSet.find(val.note) != speedupSet.end()) {
+                speeddownSet.erase(val.note);
+            }
+            if ( startStopSet.find(val.note) != startStopSet.end()) {
+                startStopSet.erase(val.note);
+            }
+        }
+
+        if ( restartSet.empty()) {
+            specialNoteInputsOn.clear();
+            rewind();
+        }
+        else if ( startStopSet.empty()) {
+            playMusic(!playingMusic());
+            songControlListener->playState(playingMusic());
+        }
+        else if ( speedupSet.empty()) {
+            //start the speeding up timer
+
+            if ( speedDir == 1 ) {
+                speedDir = 0;
+                speedCtrlTime.stop();
+            } else {
+                speedDir = 1;
+                if (! speedCtrlTime.isActive() ) {
+                    speedCtrlTime.start(500, this);
+                } else {
+                    //speedDir = 0;
+                    //speedCtrlTime.stop();
+                }
+            }
+        } else if ( speeddownSet.empty()) {
+            //start the speeding up timer
+            if ( speedDir == -1 ) {
+                speedDir = 0;
+                speedCtrlTime.stop();
+            } else {
+                speedDir = -1;
+                if (! speedCtrlTime.isActive() ) {
+                    speedCtrlTime.start(500, this);
+                } else {
+                    //speedDir = 0;
+                    //speedCtrlTime.stop();
+                }
+            }
+        }
+    }
+}
+
+void CSong::timerEvent(QTimerEvent *event) {
+    float speed = this->getSpeed();
+    speed = ((speed * 100.0) + (1 * speedDir))/100.0;
+    this->setSpeed(speed);
+    if ( songControlListener != NULL ) {
+        songControlListener->speedChanged(speed);
+    }
+}
+
+void CSong::setSongControlListener(SongControlListener * listener) {
+    this->songControlListener = listener;
+}
+
+void CSong::pianistInput(CMidiEvent inputNote) {
+
+    handleSpecialKey(inputNote);
+
+    CConductor::pianistInput(inputNote);
 }
 
 void CSong::setActiveHand(whichPart_t hand)

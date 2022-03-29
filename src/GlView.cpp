@@ -109,6 +109,12 @@ void CGLView::paintGL()
     glViewport(0, 0, width(), height());
     m_displayUpdateTicks = 0;
 
+
+    uint64_t now = timeSinceEpochMillisec2();
+
+    //myfile << (now -  prevTime) << endl;
+    prevTime = now;
+
     if (m_fullRedrawFlag)
         m_forcefullRedraw = m_forceRatingRedraw = m_forceBarRedraw = REDRAW_COUNT;
 
@@ -153,7 +159,7 @@ void CGLView::paintGL()
     BENCHMARK(11, "exit");
     BENCHMARK_RESULTS();
 
-    m_timer.start(1000/REFRESHRATE - 10, this);   //the next call is a little bit less than refresh interval due to integer division, which is enough
+    m_timer.start(1000/REFRESHRATE - 2, this);   //the next call is a little bit less than refresh interval due to integer division, which is enough
 }
 
 void CGLView::drawTimeSignature()

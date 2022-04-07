@@ -197,7 +197,7 @@ void CSong::handleSpecialKey(CMidiEvent inputNote) {
 
         if ( restartSet.empty()) {
             specialNoteInputsOn.clear();
-            rewind();
+            playFromStartBar();
         }
         else if ( startStopSet.empty()) {
             playMusic(!playingMusic());

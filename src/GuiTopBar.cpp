@@ -80,6 +80,7 @@ void GuiTopBar::speedChanged(float value) {
 }
 
 void GuiTopBar::playState(bool playing) {
+    m_atTheEndOfTheSong = false;
     setPlayButtonState(playing);
 }
 

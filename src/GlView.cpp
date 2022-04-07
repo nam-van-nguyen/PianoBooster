@@ -27,8 +27,8 @@
 /*********************************************************************************/
 
 #include <QtOpenGL>
-
 #include <QPainter>
+
 
 #include <math.h>
 
@@ -159,7 +159,7 @@ void CGLView::paintGL()
     BENCHMARK(11, "exit");
     BENCHMARK_RESULTS();
 
-    m_timer.start(1000/REFRESHRATE - 2, this);   //the next call is a little bit less than refresh interval due to integer division, which is enough
+    m_timer.start(1000/REFRESHRATE - 5, this);   //the next call is a little bit less than refresh interval due to integer division, which is enough
 }
 
 void CGLView::drawTimeSignature()

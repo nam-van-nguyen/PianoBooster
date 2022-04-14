@@ -170,7 +170,7 @@ void CSong::handleSpecialKey(CMidiEvent inputNote) {
             }
         }
 
-        if (  specialNoteInputsOn.size() < 2 ) {    //Must mapt to more than 1 keys
+        if (  specialNoteInputsOn.size() < 2 ) {    //Must map to more than 1 keys
             return;
         }
 

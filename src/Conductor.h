@@ -284,14 +284,14 @@ private:
     int m_pianistSplitPoint;    // Defines which notes go in the base and treble clef
     bool m_followSkillAdvanced;
     int m_lastSound;
-    int m_stopPoint;   // Were we stop the music if the pianist is late
+    int m_stopPoint;   // Where we stop the music if the pianist is late
     int m_cfg_rightNoteSound;
     int m_cfg_wrongNoteSound;
     int m_pianistGoodChan;
     int m_pianistBadChan;
     int m_cfg_earlyNotesPoint; // don't press the note too early
-    int m_cfg_stopPointAdvanced;   // Were we stop the music if the pianist is late
-    int m_cfg_stopPointBeginner;   // Were we stop the music if the pianist is late
+    int m_cfg_stopPointAdvanced;   // Where we stop the music if the pianist is late
+    int m_cfg_stopPointBeginner;   // Where we stop the music if the pianist is late
     int m_cfg_imminentNotesOffPoint;
     int m_cfg_playZoneEarly; // when playing along
     int m_cfg_playZoneLate;

@@ -29,6 +29,8 @@
 #ifndef __RATING_H__
 #define __RATING_H__
 
+#include <iostream>
+
 #include "Util.h"
 #include "Cfg.h"
 
@@ -41,12 +43,21 @@ public:
     }
 
     void reset();
-    void totalNotes(int count) { m_totalNotesCount += count;}
-    void wrongNotes(int count) { m_wrongNoteCount += count;}
-    void lateNotes(int count) { m_lateNoteCount += count;}
-    int totalNoteCount() {return m_totalNotesCount;}
-    int wrongNoteCount() {return m_wrongNoteCount;}
-    int lateNoteCount() {return m_lateNoteCount;}
+    void countTotalNotes(int count) {
+        m_totalNotesCount += count;
+        //std::cout << "total: " << m_totalNotesCount << endl;
+    }
+    void countWrongNotes(int count) {
+        m_wrongNoteCount += count;
+        //std::cout << "wrong: " << m_wrongNoteCount << endl;
+    }
+    void countLateNotes(int count) {
+        m_lateNoteCount += count;
+        //std::cout << "late: " << m_lateNoteCount << endl;
+    }
+    int getTotalNoteCount() {return m_totalNotesCount;}
+    int getWrongNoteCount() {return m_wrongNoteCount;}
+    int getLateNoteCount() {return m_lateNoteCount;}
 
     double rating()
     {
@@ -62,6 +73,17 @@ public:
     CColor getAccuracyColor() { return m_currentColor; }
     bool isAccuracyGood() { return m_goodAccuracyFlag; }
 
+    int getPlayedNoteTally() const;
+    void addPlayedNoteTally(int value);
+
+    int getPlayedWrongNoteTally() const;
+    void addPlayedWrongNoteTally(int value);
+
+    int getPlayedLateNoteTally() const;
+    void addPlayedLateNoteTally(int value);
+
+    int getTotalLateGood() const;
+
 private:
     int m_totalNotesCount;
     int m_previousNoteCount;
@@ -72,6 +94,12 @@ private:
     float m_factor;
     CColor m_currentColor;
     bool m_goodAccuracyFlag;
+
+    // Declaring new fields to avoid having conflict with existing fields
+    int playedNoteTally;  //Total played notes up to that point in time
+    int playedWrongNoteTally; //Total played notes being played wrong,
+    int playedLateNoteTally;  //number of played notes that are played late up to the current time.
+    int totalLateGood;  //number of notes that are late or good
 };
 
 #endif //__RATING_H__

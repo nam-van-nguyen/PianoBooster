@@ -73,6 +73,7 @@ private:
     void drawDisplayText();
     void drawTimeSignature();
     void drawAccurracyBar();
+    void drawOverallAccurracy();
     void drawBarNumber();
     void updateMidiTask();
 

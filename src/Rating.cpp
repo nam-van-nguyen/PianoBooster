@@ -39,6 +39,12 @@ void CRating::reset()
     m_previousLateNoteCount = 0;
     m_factor = 2.0;
     m_goodAccuracyFlag = false;
+
+    playedNoteTally = 0;
+    playedWrongNoteTally = 0;
+    playedLateNoteTally = 0;
+
+    totalLateGood = 0;
 }
 
 void CRating::calculateAccuracy()
@@ -104,5 +110,43 @@ void CRating::calculateAccuracy()
             }
         }
     }
+}
+
+int CRating::getPlayedNoteTally() const
+{
+    return playedNoteTally;
+}
+
+void CRating::addPlayedNoteTally(int value)
+{
+    playedNoteTally += value;
+    totalLateGood = playedNoteTally - playedWrongNoteTally;
+}
+
+int CRating::getPlayedWrongNoteTally() const
+{
+    return playedWrongNoteTally;
+}
+
+void CRating::addPlayedWrongNoteTally(int value)
+{
+    playedWrongNoteTally += value;
+    totalLateGood = playedNoteTally - playedWrongNoteTally;
+}
+
+int CRating::getPlayedLateNoteTally() const
+{
+    return playedLateNoteTally;
+}
+
+void CRating::addPlayedLateNoteTally(int value)
+{
+    playedLateNoteTally += value;
+    totalLateGood += value;
+}
+
+int CRating::getTotalLateGood() const
+{
+    return totalLateGood;
 }
 

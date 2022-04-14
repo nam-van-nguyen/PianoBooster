@@ -144,6 +144,8 @@ void CGLView::paintGL()
     drawAccurracyBar();
     BENCHMARK(5, "drawAccurracyBar");
 
+    drawOverallAccurracy();
+
     drawBarNumber();
     BENCHMARK(6, "drawBarNumber");
 
@@ -198,6 +200,39 @@ void CGLView::drawTimeSignature()
     renderText(x,y, 0, bufferBottom, m_timeSigFont);
 }
 
+void CGLView::drawOverallAccurracy() {
+    if (m_song->getPlayMode() == PB_PLAY_MODE_listen || !m_settings->getWarningMessage().isEmpty())
+        return;
+    if (m_forceRatingRedraw == 0)
+        return;
+    m_forceRatingRedraw--;
+
+    int totalLateGood = m_rating->getTotalLateGood();
+    if ( totalLateGood == 0 ) {
+        //totalLateGood = 1;
+    }
+
+    //int percentLate = floor(100.0 * (float) m_rating->getPlayedLateNoteTally()/((float) totalLateGood));
+
+    CColor bgColor = m_settings->backgroundColor();
+    glColor4f(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue);
+
+    float y = Cfg::getAppHeight() - 49;
+    float x = TEXT_LEFT_MARGIN;
+
+    renderText(x, y, 0, tr("Late:") + " " + QString::number(m_rating->getPlayedLateNoteTally()) + "/" + QString::number(totalLateGood), m_timeRatingFont);
+
+    int totalPlayed = m_rating->getPlayedNoteTally();
+    if ( totalPlayed == 0 ) {
+        //totalPlayed = 1;
+    }
+    //int percentCorrect = floor(100.0 * ((float) (totalPlayed - m_rating->getPlayedWrongNoteTally()))/((float) totalPlayed));
+
+    x += 130;
+    renderText(x, y, 0, tr("Wrong:") + " " + QString::number( m_rating->getPlayedWrongNoteTally()) + "/" + QString::number(totalPlayed), m_timeRatingFont);
+
+}
+
 void CGLView::drawAccurracyBar()
 {
     if (m_song->getPlayMode() == PB_PLAY_MODE_listen || !m_settings->getWarningMessage().isEmpty())
@@ -246,7 +281,7 @@ void CGLView::drawDisplayText()
     if (m_forcefullRedraw == 0)
         return;
 
-    int y = Cfg::getAppHeight() - 14;
+    int y = Cfg::getAppHeight() - 10;
 
     CColor bgColor = m_settings->backgroundColor();
 
@@ -293,9 +328,9 @@ void CGLView::drawDisplayText()
     if (m_titleHeight < 45 )
         return;
 
-    y = Cfg::getAppHeight() - m_titleHeight;
+    y = Cfg::getAppHeight() - m_titleHeight - 28;
 
-    renderText(TEXT_LEFT_MARGIN, y+6, 0,tr("Song:") + " " + m_song->getSongTitle(), m_timeRatingFont);
+    renderText(TEXT_LEFT_MARGIN, y, 0,tr("Song:") + " " + m_song->getSongTitle(), m_timeRatingFont);
     /*
     char buffer[100];
     sprintf(buffer, "Notes %d wrong %d Late %d Score %4.1f%%",
@@ -311,7 +346,7 @@ void CGLView::drawBarNumber()
         return;
     m_forceBarRedraw--;
 
-    float y = Cfg::getAppHeight() - m_titleHeight - 34;
+    float y = Cfg::getAppHeight() - m_titleHeight - 68;
     float x = TEXT_LEFT_MARGIN;
 
     //CDraw::drColor (Cfg::backgroundColor());

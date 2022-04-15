@@ -208,29 +208,54 @@ void CGLView::drawOverallAccurracy() {
     m_forceRatingRedraw--;
 
     int totalLateGood = m_rating->getTotalLateGood();
-    if ( totalLateGood == 0 ) {
-        //totalLateGood = 1;
-    }
-
-    //int percentLate = floor(100.0 * (float) m_rating->getPlayedLateNoteTally()/((float) totalLateGood));
-
     CColor bgColor = m_settings->backgroundColor();
     glColor4f(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue);
 
     float y = Cfg::getAppHeight() - 49;
     float x = TEXT_LEFT_MARGIN;
 
-    renderText(x, y, 0, tr("Late:") + " " + QString::number(m_rating->getPlayedLateNoteTally()) + "/" + QString::number(totalLateGood), m_timeRatingFont);
+    renderText(x, y, 0, tr("On time:"), m_timeRatingFont);
+
+    drawRatioBar(x + 70, y, 180, (int) totalLateGood - m_rating->getPlayedLateNoteTally(), totalLateGood,
+                 CColor(0.0, 1.0, 0.0), bgColor,
+                 CColor(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue), true);
 
     int totalPlayed = m_rating->getPlayedNoteTally();
-    if ( totalPlayed == 0 ) {
-        //totalPlayed = 1;
+
+    x += 260;
+    renderText(x, y, 0, tr("Correct:"), m_timeRatingFont);
+    drawRatioBar(x + 70, y, 180, (int) totalPlayed - m_rating->getPlayedWrongNoteTally(), totalPlayed,
+                 CColor(0.0, 1.0, 0.0), bgColor,
+                 CColor(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue), true);
+}
+
+void CGLView::drawRatioBar(int x, int y, int width, int value, int maxVal, CColor valColor,
+                           CColor bgColor, CColor borderColor, bool showValue) {
+    float ratio = 0.0;
+    if ( maxVal != 0 ) {
+        ratio = ((float) value)/maxVal;
     }
-    //int percentCorrect = floor(100.0 * ((float) (totalPlayed - m_rating->getPlayedWrongNoteTally()))/((float) totalPlayed));
 
-    x += 130;
-    renderText(x, y, 0, tr("Wrong:") + " " + QString::number( m_rating->getPlayedWrongNoteTally()) + "/" + QString::number(totalPlayed), m_timeRatingFont);
+    const int lineWidth = 16/2;
+    CDraw::drColor (bgColor);
+    glRectf(x, y - lineWidth, x + width, y + lineWidth);
 
+    CDraw::drColor (valColor);
+    glRectf(x, y - lineWidth, x + width * ratio, y + lineWidth);
+    glLineWidth (1);
+
+    CDraw::drColor (borderColor);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f (x, y + lineWidth);
+    glVertex2f (x+ width, y  + lineWidth);
+    glVertex2f (x + width, y - lineWidth);
+    glVertex2f (x, y - lineWidth);
+    glEnd();
+
+    if ( showValue ) {
+        int widgetPointSize = m_qtWindow->font().pointSize();
+        renderText(x + 3, y + 0.0, 0, QString::number(value) + "/" + QString::number(maxVal), QFont("Arial", static_cast<int>(widgetPointSize * 1.0)));
+    }
 }
 
 void CGLView::drawAccurracyBar()
@@ -242,32 +267,14 @@ void CGLView::drawAccurracyBar()
         return;
     m_forceRatingRedraw--;
 
-    float accuracy;
-    CColor color;
-
     float y = Cfg::getAppHeight() - 14;
     const float x = accuracyBarStart;
     const int width = 360;
-    const int lineWidth = 8/2;
-
     m_rating->calculateAccuracy();
-
-    accuracy = m_rating->getAccuracyValue();
-    color = m_rating->getAccuracyColor();
-    CDraw::drColor (color);
-    glRectf(x, y - lineWidth, x + width * accuracy, y + lineWidth);
-    CDraw::drColor (m_settings->backgroundColor());
-    glRectf(x + width * accuracy, y - lineWidth, x + width, y + lineWidth);
-
-    glLineWidth (1);
     CColor bgColor = m_settings->backgroundColor();
-    CDraw::drColor (CColor(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue));
-    glBegin(GL_LINE_LOOP);
-    glVertex2f (x, y + lineWidth);
-    glVertex2f (x+ width, y  + lineWidth);
-    glVertex2f (x + width, y - lineWidth);
-    glVertex2f (x, y - lineWidth);
-    glEnd();
+    drawRatioBar(x, y, width, (int) (100* m_rating->getAccuracyValue()), 100,
+                 m_rating->getAccuracyColor(), bgColor,
+                 CColor(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue), true);
 }
 
 void CGLView::drawDisplayText()

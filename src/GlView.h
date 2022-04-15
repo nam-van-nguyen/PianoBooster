@@ -73,6 +73,7 @@ private:
     void drawDisplayText();
     void drawTimeSignature();
     void drawAccurracyBar();
+    void drawRatioBar(int x, int y, int width, int value, int maxVal, CColor borderColor, CColor bgColor, CColor valColor, bool showValue);
     void drawOverallAccurracy();
     void drawBarNumber();
     void updateMidiTask();

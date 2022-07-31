@@ -53,6 +53,7 @@ Edit file (using sudo as needed):
 Locate the following lines, uncomment as needed, and adjust values as followed:
 
 default-fragments = 2
+
 default-fragment-size-msec = 5
 
 Save the file, and restart pulseaudio using this command:

@@ -36,7 +36,8 @@ The latency fix is no longer required since Piano Booster on Windows now include
 Previously on windows the latency fix was required when using the MS GM Wavetable Synthesizer sound generator which has very high latency.
 
 ## Linux latency issue
-If you experience latency in Linux, try the following steps, it is very likely to fix your the problem:
+If you experience latency in Linux, try the following steps, it is very likely to fix the problem:
+
 First, see what is your current latency output, using the following command:
 
 [my console ~]$ pacmd list-sinks | grep 'latency: [1-9]'

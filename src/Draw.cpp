@@ -39,6 +39,7 @@ int CDraw::m_forceCompileRedraw;
 
 QColor CDraw::color;
 
+#ifndef NO_USE_FTGL
 FTFont * setupFont() {
     FTFont * cacheFont = NULL;  //TBD should use singleton pattern or wrapper
     //if ( cacheFont == NULL ) {
@@ -70,6 +71,7 @@ FTFont * setupFont() {
     //}
     return cacheFont;
 }
+#endif
 
 CDraw::CDraw(CSettings* settings)
 #ifndef NO_USE_FTGL

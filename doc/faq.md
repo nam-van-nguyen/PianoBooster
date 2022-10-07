@@ -34,3 +34,37 @@ timidity -iA -B2,8 -Os -EFreverb=0
 ## What is the latency fix?
 The latency fix is no longer required since Piano Booster on Windows now includes the integrated FluidSynth sound generator which works in real-time and has low latency.
 Previously on windows the latency fix was required when using the MS GM Wavetable Synthesizer sound generator which has very high latency.
+
+## Linux latency issue
+If you experience latency in Linux, try the following steps, it is very likely to fix the problem:
+
+First, see what is your current latency output, using the following command:
+
+[my console ~]$ pacmd list-sinks | grep 'latency: [1-9]'
+
+You should see something like this:
+        current latency: 100,86 ms
+        fixed latency: 100,14 ms
+        
+Edit file (using sudo as needed):
+
+/etc/pulse/daemon.conf
+
+Locate the following lines, uncomment as needed, and adjust values as followed:
+
+default-fragments = 2
+
+default-fragment-size-msec = 5
+
+Save the file, and restart pulseaudio using this command:
+
+[my console ~]$ pulseaudio -k
+
+Check your latency again:
+
+[my console ~]$ pacmd list-sinks | grep 'latency: [1-9]'
+
+
+
+
+

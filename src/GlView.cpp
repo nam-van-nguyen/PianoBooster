@@ -223,7 +223,7 @@ void CGLView::drawOverallAccurracy() {
     int totalPlayed = m_rating->getPlayedNoteTally();
 
     x += 260;
-    renderText(x, y, 0, tr("Correct:"), m_timeRatingFont);
+    renderText(x, y, 0, tr("On Key:"), m_timeRatingFont);
     drawRatioBar(x + 70, y, 180, (int) totalPlayed - m_rating->getPlayedWrongNoteTally(), totalPlayed,
                  CColor(0.0, 1.0, 0.0), bgColor,
                  CColor(1.0 - bgColor.red, 1.0 - bgColor.green, 1.0 - bgColor.blue), true);

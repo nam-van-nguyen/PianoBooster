@@ -214,6 +214,8 @@ protected:
 
     eventBits_t m_realTimeEventBits; //used to signal real time events to the caller of task()
 
+    CRating m_rating;
+
     void outputSavedNotes();
 
     void resetWantedChord();
@@ -264,7 +266,6 @@ private:
         return m_followState;
     }
 
-    CRating m_rating;
     CQueue<CMidiEvent>* m_savedNoteQueue;
     CQueue<CMidiEvent>* m_savedNoteOffQueue;
     CMidiEvent m_nextMidiEvent;

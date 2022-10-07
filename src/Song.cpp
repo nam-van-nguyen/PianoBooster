@@ -202,6 +202,8 @@ void CSong::handleSpecialKey(CMidiEvent inputNote) {
         else if ( startStopSet.empty()) {
             playMusic(!playingMusic());
             songControlListener->playState(playingMusic());
+            m_rating.addPlayedWrongNoteTally(-this->startStopSet.size());
+            m_rating.addPlayedNoteTally(-this->startStopSet.size());
         }
         else if ( speedupSet.empty()) {
             //start the speeding up timer
@@ -213,11 +215,14 @@ void CSong::handleSpecialKey(CMidiEvent inputNote) {
                 speedDir = 1;
                 if (! speedCtrlTime.isActive() ) {
                     speedCtrlTime.start(500, this);
+
                 } else {
                     //speedDir = 0;
                     //speedCtrlTime.stop();
                 }
             }
+            //m_rating.addPlayedWrongNoteTally(-this->speedupSet.size());
+            m_rating.addPlayedNoteTally(-this->speedupSet.size());
         } else if ( speeddownSet.empty()) {
             //start the speeding up timer
             if ( speedDir == -1 ) {
@@ -232,6 +237,8 @@ void CSong::handleSpecialKey(CMidiEvent inputNote) {
                     //speedCtrlTime.stop();
                 }
             }
+            //m_rating.addPlayedWrongNoteTally(-this->speeddownSet.size());
+            m_rating.addPlayedNoteTally(-this->speeddownSet.size());
         }
     }
 }
@@ -251,9 +258,9 @@ void CSong::setSongControlListener(SongControlListener * listener) {
 
 void CSong::pianistInput(CMidiEvent inputNote) {
 
-    handleSpecialKey(inputNote);
-
     CConductor::pianistInput(inputNote);
+
+    handleSpecialKey(inputNote);
 }
 
 void CSong::setActiveHand(whichPart_t hand)
